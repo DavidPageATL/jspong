@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #canvas-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        canvas {
+            display: inline;
+            background-color: blue;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="canvas-container">
+        <canvas id="canvas" width="800" height="600" />
+    </div>
+    </span>
+</body>
+<script>
+
+    let canvas = document.getElementById("canvas");
+    let width = canvas.width;
+    let height = canvas.height;
+    let ctx = canvas.getContext("2d");
+
+    var state = {
+        x: (width / 2),
+        y: (height / 2),
+        pressedKeys: {
+            up: false,
+            down: false
+        }
+    }
+
+    const keyMap = {
+        87: 'up',
+        83: 'down'
+    }
+
+    function keydown(event) {
+        let key = keyMap[event.keyCode];
+        state.pressedKeys[key] = true;
+    }
+
+    function keyup(event) {
+        let key = keyMap[event.keyCode]
+        state.pressedKeys[key] = false;
+    }
+
+    window.addEventListener("keydown", keydown, false);
+    window.addEventListener("keyup", keyup, false);
+
+    function update(progress) {
+        if (state.pressedKeys.up) {
+            state.y -= progress;
+        }
+
+        if (state.pressedKeys.down) {
+            state.y += progress;
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "white";
+
+        ctx.fillRect(state.x - 5, state.y - 5, 10, 10);
+    }
+
+    function loop(timestamp) {
+        var progress = timestamp - lastRender;
+
+        update(progress);
+        draw();
+
+        lastRender = timestamp;
+        window.requestAnimationFrame(loop);
+    }
+
+    let lastRender = 0;
+    window.requestAnimationFrame(loop);
+
+</script>
+
+</html>
